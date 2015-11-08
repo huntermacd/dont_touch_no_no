@@ -1,4 +1,6 @@
-MyGame.Game = function(game){};
+MyGame.Game = function(game){
+    this.rs = 0;
+};
 
 MyGame.Game.prototype = {
     preload: function(){
@@ -7,6 +9,8 @@ MyGame.Game.prototype = {
         this.load.image('baddie', 'assets/baddie.png');
     },
     create: function(){
+        this.graphics = this.add.graphics(300, 300);
+        
         this.baddies = this.add.group();
 
         for (var i = 0; i <= 32; i++) {
@@ -32,6 +36,7 @@ MyGame.Game.prototype = {
         this.man = this.add.sprite(300, 300, 'man');
         this.man.anchor.x = 0.5;
         this.man.pivot.y = 70;
+        this.man.rotation = 12.5664;
 
         this.flash = this.man.animations.add('flash');
         this.man.animations.play('flash', 10, true);
@@ -40,14 +45,26 @@ MyGame.Game.prototype = {
 
         this.center = this.add.sprite(300, 300, 'center');
         this.center.anchor.set(0.5);
+
+        this.rsText = this.add.text(50, 50, 'rotations: ' + this.rs);
     },
     update: function(){
         if (this.keys.right.isDown){
             this.man.rotation += .1;
+            this.graphics.clear();
+            this.graphics.moveTo(0, 0);
+            this.graphics.beginFill(0xCCCCCC);
+            this.graphics.arc(0, 0, 63, this.math.degToRad(-90), this.man.rotation - 1.5708, false);
+            this.graphics.endFill();
         }
 
         if (this.keys.left.isDown){
             this.man.rotation -= .1;
+            this.graphics.clear();
+            this.graphics.moveTo(0, 0);
+            this.graphics.beginFill(0xCCCCCC);
+            this.graphics.arc(0, 0, 63, this.math.degToRad(-90), this.man.rotation - 1.5708, false);
+            this.graphics.endFill();
         }
 
         this.baddies.forEach(function(baddie){
@@ -79,6 +96,13 @@ MyGame.Game.prototype = {
                 this.state.start('GameOver');
             }
         }, this);
+
+        if (this.man.rotation > 6.1 && this.man.rotation < 6.3 || this.man.rotation > 18.7 && this.man.rotation < 18.9){
+            this.man.rotation = 12.5664;
+            this.rs += 1;
+        }
+
+        this.rsText.setText('rotations: ' + this.rs);
     },
     render: function(){
         // this.game.debug.spriteInfo(this.baddie, 32, 32);
@@ -88,5 +112,8 @@ MyGame.Game.prototype = {
         var boundsB = spriteB.getBounds();
 
         return Phaser.Rectangle.intersects(boundsA, boundsB);
+    },
+    shutdown: function(){
+        this.rs = 0;
     }
 };
