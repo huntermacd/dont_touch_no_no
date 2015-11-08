@@ -1,5 +1,6 @@
 MyGame.Game = function(game){
     this.rs = 0;
+    this.minutes = 0;
 };
 
 MyGame.Game.prototype = {
@@ -10,28 +11,28 @@ MyGame.Game.prototype = {
     },
     create: function(){
         this.graphics = this.add.graphics(300, 300);
-        
-        this.baddies = this.add.group();
 
-        for (var i = 0; i <= 32; i++) {
-            var randomX = this.rnd.integerInRange(0, game.width);
-            var randomY = this.rnd.integerInRange(0, game.height);
+        // this.baddies = this.add.group();
 
-            var options = [-15, game.width + 15]
+        // for (var i = 0; i <= 32; i++) {
+        //     var randomX = this.rnd.integerInRange(0, game.width);
+        //     var randomY = this.rnd.integerInRange(0, game.height);
 
-            if (this.rnd.integerInRange(1, 2) === 1){
-                this.baddies.create(randomX, Phaser.ArrayUtils.getRandomItem(options), 'baddie');
-            } else {
-                this.baddies.create(Phaser.ArrayUtils.getRandomItem(options), randomY, 'baddie');
-            }
-        };
+        //     var options = [-15, game.width + 15]
 
-        this.baddies.forEach(function(baddie){
-            baddie.anchor.set(0.5);
-            this.add.tween(baddie).to(
-                {x: 300, y: 300}, 2000, Phaser.Easing.Default, true, this.rnd.integerInRange(0, 10000)
-            );
-        }, this);
+        //     if (this.rnd.integerInRange(1, 2) === 1){
+        //         this.baddies.create(randomX, Phaser.ArrayUtils.getRandomItem(options), 'baddie');
+        //     } else {
+        //         this.baddies.create(Phaser.ArrayUtils.getRandomItem(options), randomY, 'baddie');
+        //     }
+        // };
+
+        // this.baddies.forEach(function(baddie){
+        //     baddie.anchor.set(0.5);
+        //     this.add.tween(baddie).to(
+        //         {x: 300, y: 300}, 2000, Phaser.Easing.Default, true, this.rnd.integerInRange(0, 10000)
+        //     );
+        // }, this);
 
         this.man = this.add.sprite(300, 300, 'man');
         this.man.anchor.x = 0.5;
@@ -47,6 +48,14 @@ MyGame.Game.prototype = {
         this.center.anchor.set(0.5);
 
         this.rsText = this.add.text(50, 50, 'rotations: ' + this.rs);
+
+        this.clock = this.time.create(false);
+        this.clock.loop(100, function(){
+            this.secs++;
+        }, this);
+        this.clock.start();
+
+        this.clockText = this.add.text(450, 50, this.formatTime());
     },
     update: function(){
         if (this.keys.right.isDown){
@@ -67,35 +76,35 @@ MyGame.Game.prototype = {
             this.graphics.endFill();
         }
 
-        this.baddies.forEach(function(baddie){
-            if (baddie.x === 300){
-                baddie.kill();
-            }
+        // this.baddies.forEach(function(baddie){
+        //     if (baddie.x === 300){
+        //         baddie.kill();
+        //     }
 
-            if (baddie.alive === false){
-                baddie.revive();
+        //     if (baddie.alive === false){
+        //         baddie.revive();
 
-                var randomX = this.rnd.integerInRange(0, game.width);
-                var randomY = this.rnd.integerInRange(0, game.height);
+        //         var randomX = this.rnd.integerInRange(0, game.width);
+        //         var randomY = this.rnd.integerInRange(0, game.height);
 
-                var options = [-15, game.width + 15]
+        //         var options = [-15, game.width + 15]
 
-                if (this.rnd.integerInRange(1, 2) === 1){
-                    baddie.x = randomX;
-                    baddie.y = Phaser.ArrayUtils.getRandomItem(options);
-                } else {
-                    baddie.x = Phaser.ArrayUtils.getRandomItem(options);
-                    baddie.y = randomY;
-                }
+        //         if (this.rnd.integerInRange(1, 2) === 1){
+        //             baddie.x = randomX;
+        //             baddie.y = Phaser.ArrayUtils.getRandomItem(options);
+        //         } else {
+        //             baddie.x = Phaser.ArrayUtils.getRandomItem(options);
+        //             baddie.y = randomY;
+        //         }
 
-                this.add.tween(baddie).to(
-                    {x: 300, y: 300}, 2000, Phaser.Easing.Default, true, this.rnd.integerInRange(0, 10000)
-                );
-            }
-            if (this.checkOverlap(this.man, baddie)){
-                this.state.start('GameOver');
-            }
-        }, this);
+        //         this.add.tween(baddie).to(
+        //             {x: 300, y: 300}, 2000, Phaser.Easing.Default, true, this.rnd.integerInRange(0, 10000)
+        //         );
+        //     }
+        //     if (this.checkOverlap(this.man, baddie)){
+        //         this.state.start('GameOver');
+        //     }
+        // }, this);
 
         if (this.man.rotation > 6.1 && this.man.rotation < 6.3 || this.man.rotation > 18.7 && this.man.rotation < 18.9){
             this.man.rotation = 12.5664;
@@ -103,6 +112,8 @@ MyGame.Game.prototype = {
         }
 
         this.rsText.setText('rotations: ' + this.rs);
+
+        this.clockText.setText(this.formatTime());
     },
     render: function(){
         // this.game.debug.spriteInfo(this.baddie, 32, 32);
@@ -113,7 +124,23 @@ MyGame.Game.prototype = {
 
         return Phaser.Rectangle.intersects(boundsA, boundsB);
     },
+    formatTime: function(){
+        var seconds = this.clock.seconds.toFixed(2);
+
+        if (seconds < 10){
+            seconds = '0' + seconds;
+        }
+
+        if (seconds > 59.99){
+            this.clock.stop();
+            this.clock.start();
+            this.minutes++;
+        }
+
+        return this.minutes + ':' + seconds;
+    },
     shutdown: function(){
         this.rs = 0;
+        this.minutes = 0;
     }
 };
