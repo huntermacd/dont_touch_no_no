@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Don't Touch No, No</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script src="phaser.min.js"></script>
+    <script src="MainMenu.js"></script>
+    <script src="Game.js"></script>
+    <script src="GameOver.js"></script>
+</head>
+<body oncontextmenu="return false;">
+    <script type="text/javascript">
+        var game = new Phaser.Game(600, 600);
+        game.state.add('MainMenu', MyGame.MainMenu);
+        game.state.add('Game', MyGame.Game);
+        game.state.add('GameOver', MyGame.GameOver);
+        game.state.start('MainMenu');
+    </script>
+</body>
+</html>
