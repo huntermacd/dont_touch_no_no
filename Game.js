@@ -33,9 +33,12 @@ MyGame.Game.prototype = {
         this.rsText = this.add.text(50, 50, 'rotations: ' + this.rs);
 
         this.clock = this.time.create(false);
+        this.clock.loop(1000, this.addBaddie, this);
         this.clock.start();
 
         this.clockText = this.add.text(450, 50, this.formatTime());
+
+        this.baddieTotal = this.add.text(50, 25, 'total baddies: ' + this.baddies.length);
     },
     update: function(){
         if (this.keys.right.isDown){
@@ -70,14 +73,14 @@ MyGame.Game.prototype = {
         if (this.man.rotation > 6.1 && this.man.rotation < 6.3 || this.man.rotation > 18.7 && this.man.rotation < 18.9){
             this.man.rotation = 12.5664;
             this.rs += 1;
+            this.baddies.removeChildAt(this.baddies.length - 1);
         }
 
         this.rsText.setText('rotations: ' + this.rs);
 
         this.clockText.setText(this.formatTime());
-    },
-    render: function(){
-        // this.game.debug.spriteInfo(this.baddie, 32, 32);
+
+        this.baddieTotal.setText('total baddies: ' + this.baddies.length);
     },
     addBaddie: function(){
         var randomX = this.rnd.integerInRange(0, game.width);
@@ -92,7 +95,7 @@ MyGame.Game.prototype = {
         }
 
         baddie.anchor.set(0.5);
-        this.add.tween(baddie).to({x: 300, y: 300}, 2000, Phaser.Easing.Default, true);
+        this.add.tween(baddie).to({x: 300, y: 300}, 2000, Phaser.Easing.Default, true, this.rnd.integerInRange(0, 1000));
 
         this.baddies.add(baddie);
     },
