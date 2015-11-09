@@ -67,6 +67,7 @@ MyGame.Game.prototype = {
 
             if (this.checkOverlap(this.man, baddie)){
                 this.state.start('GameOver');
+                MyGame.finalTime = this.formatTime();
             }
         }, this);
 
