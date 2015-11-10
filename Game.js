@@ -1,7 +1,6 @@
 MyGame.Game = function(game){
     this.rs = 0;
     this.minutes = 0;
-    this.options = [-15, game.width + 15];
 };
 
 MyGame.Game.prototype = {
@@ -11,13 +10,16 @@ MyGame.Game.prototype = {
         this.load.image('baddie', 'assets/baddie.png');
     },
     create: function(){
-        this.graphics = this.add.graphics(300, 300);
+        this.centerX = game.width / 2;
+        this.centerY = game.height / 2;
+
+        this.graphics = this.add.graphics(this.centerX, this.centerY);
 
         this.baddies = this.add.group();
 
         this.addBaddie();
 
-        this.man = this.add.sprite(300, 300, 'man');
+        this.man = this.add.sprite(this.centerX, this.centerY, 'man');
         this.man.anchor.x = 0.5;
         this.man.pivot.y = 70;
         this.man.rotation = 12.5664;
@@ -27,7 +29,7 @@ MyGame.Game.prototype = {
 
         this.keys = this.input.keyboard.createCursorKeys();
 
-        this.center = this.add.sprite(300, 300, 'center');
+        this.center = this.add.sprite(this.centerX, this.centerY, 'center');
         this.center.anchor.set(0.5);
 
         this.rsText = this.add.text(50, 50, 'rotations: ' + this.rs);
@@ -36,7 +38,7 @@ MyGame.Game.prototype = {
         this.clock.loop(1000, this.addBaddie, this);
         this.clock.start();
 
-        this.clockText = this.add.text(450, 50, this.formatTime());
+        this.clockText = this.add.text(game.width - 150, 25, this.formatTime());
 
         this.baddieTotal = this.add.text(50, 25, 'total baddies: ' + this.baddies.length);
     },
@@ -60,7 +62,7 @@ MyGame.Game.prototype = {
         }
 
         this.baddies.forEach(function(baddie){
-            if (baddie.x === 300){
+            if (baddie.x === this.centerX){
                 baddie.destroy();
                 this.addBaddie();
             }
@@ -90,13 +92,13 @@ MyGame.Game.prototype = {
         var baddie;
 
         if (this.rnd.integerInRange(1, 2) === 1){
-            baddie = this.add.sprite(randomX, Phaser.ArrayUtils.getRandomItem(this.options), 'baddie');
+            baddie = this.add.sprite(randomX, Phaser.ArrayUtils.getRandomItem([-15, game.height + 15]), 'baddie');
         } else {
-            baddie = this.add.sprite(Phaser.ArrayUtils.getRandomItem(this.options), randomY, 'baddie');
+            baddie = this.add.sprite(Phaser.ArrayUtils.getRandomItem([-15, game.width + 15]), randomY, 'baddie');
         }
 
         baddie.anchor.set(0.5);
-        this.add.tween(baddie).to({x: 300, y: 300}, 2000, Phaser.Easing.Default, true, this.rnd.integerInRange(0, 1000));
+        this.add.tween(baddie).to({x: this.centerX, y: this.centerY}, 2000, Phaser.Easing.Default, true, this.rnd.integerInRange(0, 1000));
 
         this.baddies.add(baddie);
     },

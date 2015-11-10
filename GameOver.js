@@ -7,14 +7,17 @@ MyGame.GameOver.prototype = {
         this.load.image('playmore', 'assets/playmore.png');
     },
     create: function(){
-        this.gameover = this.add.sprite(300, 120, 'gameover');
+        this.centerX = game.width / 2;
+        this.centerY = game.height / 2;
+
+        this.gameover = this.add.sprite(this.centerX, this.centerY - 180, 'gameover');
         this.gameover.anchor.set(0.5);
 
-        this.mainmenu = this.add.sprite(140, 450, 'mainmenu');
+        this.mainmenu = this.add.sprite(this.centerX - 160, this.centerY + 150, 'mainmenu');
         this.mainmenu.anchor.set(0.5);
         this.mainmenu.inputEnabled = true;
 
-        this.playmore = this.add.sprite(400, 450, 'playmore');
+        this.playmore = this.add.sprite(this.centerX + 100, this.centerY + 150, 'playmore');
         this.playmore.anchor.set(0.5);
         this.playmore.inputEnabled = true;
 
@@ -38,7 +41,7 @@ MyGame.GameOver.prototype = {
             this.state.start('MainMenu');
         }, this);
 
-        this.scoreDisplay = this.add.text(300, 275, 'final time: ' + MyGame.finalTime, {font: 'bold 32px Helvetica'});
+        this.scoreDisplay = this.add.text(this.centerX, this.centerY - 25, 'final time: ' + MyGame.finalTime, {font: 'bold 32px Helvetica'});
         this.scoreDisplay.anchor.set(0.5);
     }
 };

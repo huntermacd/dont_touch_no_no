@@ -10,7 +10,7 @@
 </head>
 <body oncontextmenu="return false;">
     <script type="text/javascript">
-        var game = new Phaser.Game(600, 600);
+        var game = new Phaser.Game(window.innerWidth * window.devicePixelRatio, window.innerHeight * window.devicePixelRatio);
         game.state.add('MainMenu', MyGame.MainMenu);
         game.state.add('Game', MyGame.Game);
         game.state.add('GameOver', MyGame.GameOver);
