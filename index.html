@@ -2,6 +2,8 @@
 <html>
 <head>
     <title>Don't Touch No, No</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <link rel="stylesheet" type="text/css" href="style.css">
     <script src="phaser.min.js"></script>
     <script src="MainMenu.js"></script>
@@ -10,7 +12,7 @@
 </head>
 <body oncontextmenu="return false;">
     <script type="text/javascript">
-        var game = new Phaser.Game(window.innerWidth * window.devicePixelRatio, window.innerHeight * window.devicePixelRatio);
+        var game = new Phaser.Game('100%', '100%');
         game.state.add('MainMenu', MyGame.MainMenu);
         game.state.add('Game', MyGame.Game);
         game.state.add('GameOver', MyGame.GameOver);

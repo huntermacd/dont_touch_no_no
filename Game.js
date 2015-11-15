@@ -5,7 +5,7 @@ MyGame.Game = function(game){
 
 MyGame.Game.prototype = {
     preload: function(){
-        this.load.spritesheet('man', 'assets/man.png', 15, 15, 2);
+        this.load.spritesheet('man', 'assets/man.png', 45, 45, 2);
         this.load.image('center', 'assets/center.png');
         this.load.image('baddie', 'assets/baddie.png');
     },
@@ -13,15 +13,19 @@ MyGame.Game.prototype = {
         this.centerX = game.width / 2;
         this.centerY = game.height / 2;
 
+        this.leftPanel = new Phaser.Rectangle(0, 0, this.centerX, game.height);
+
         this.graphics = this.add.graphics(this.centerX, this.centerY);
+        this.graphics.scale.setTo(MyGame.scaleRatio);
 
         this.baddies = this.add.group();
 
         this.addBaddie();
 
         this.man = this.add.sprite(this.centerX, this.centerY, 'man');
+        this.man.scale.setTo(MyGame.scaleRatio);
         this.man.anchor.x = 0.5;
-        this.man.pivot.y = 70;
+        this.man.pivot.y = 210;
         this.man.rotation = 12.5664;
 
         this.flash = this.man.animations.add('flash');
@@ -30,6 +34,7 @@ MyGame.Game.prototype = {
         this.keys = this.input.keyboard.createCursorKeys();
 
         this.center = this.add.sprite(this.centerX, this.centerY, 'center');
+        this.center.scale.setTo(MyGame.scaleRatio);
         this.center.anchor.set(0.5);
 
         this.rsText = this.add.text(50, 50, 'rotations: ' + this.rs);
@@ -45,20 +50,21 @@ MyGame.Game.prototype = {
     update: function(){
         if (this.keys.right.isDown){
             this.man.rotation += .1;
-            this.graphics.clear();
-            this.graphics.moveTo(0, 0);
-            this.graphics.beginFill(0xCCCCCC);
-            this.graphics.arc(0, 0, 63, this.math.degToRad(-90), this.man.rotation - 1.5708, false);
-            this.graphics.endFill();
+            this.drawDisc();
         }
 
         if (this.keys.left.isDown){
             this.man.rotation -= .1;
-            this.graphics.clear();
-            this.graphics.moveTo(0, 0);
-            this.graphics.beginFill(0xCCCCCC);
-            this.graphics.arc(0, 0, 63, this.math.degToRad(-90), this.man.rotation - 1.5708, false);
-            this.graphics.endFill();
+            this.drawDisc();
+        }
+
+        if (this.input.pointer1.isDown){
+            if (this.leftPanel.contains(this.input.pointer1.x, this.input.pointer1.y)){
+                this.man.rotation -= .1;
+            } else {
+                this.man.rotation += .1;
+            }
+            this.drawDisc();
         }
 
         this.baddies.forEach(function(baddie){
@@ -85,6 +91,13 @@ MyGame.Game.prototype = {
 
         this.baddieTotal.setText('total baddies: ' + this.baddies.length);
     },
+    drawDisc: function(){
+        this.graphics.clear();
+        this.graphics.moveTo(0, 0);
+        this.graphics.beginFill(0xCCCCCC);
+        this.graphics.arc(0, 0, 189, this.math.degToRad(-90), this.man.rotation - 1.5708, false);
+        this.graphics.endFill();
+    },
     addBaddie: function(){
         var randomX = this.rnd.integerInRange(0, game.width);
         var randomY = this.rnd.integerInRange(0, game.height);
@@ -97,6 +110,7 @@ MyGame.Game.prototype = {
             baddie = this.add.sprite(Phaser.ArrayUtils.getRandomItem([-15, game.width + 15]), randomY, 'baddie');
         }
 
+        baddie.scale.setTo(MyGame.scaleRatio);
         baddie.anchor.set(0.5);
         this.add.tween(baddie).to({x: this.centerX, y: this.centerY}, 2000, Phaser.Easing.Default, true, this.rnd.integerInRange(0, 1000));
 

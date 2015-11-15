@@ -11,13 +11,16 @@ MyGame.GameOver.prototype = {
         this.centerY = game.height / 2;
 
         this.gameover = this.add.sprite(this.centerX, this.centerY - 180, 'gameover');
+        this.gameover.scale.setTo(MyGame.scaleRatio);
         this.gameover.anchor.set(0.5);
 
-        this.mainmenu = this.add.sprite(this.centerX - 160, this.centerY + 150, 'mainmenu');
+        this.mainmenu = this.add.sprite(this.centerX - 100, this.centerY + 150, 'mainmenu');
+        this.mainmenu.scale.setTo(MyGame.scaleRatio);
         this.mainmenu.anchor.set(0.5);
         this.mainmenu.inputEnabled = true;
 
-        this.playmore = this.add.sprite(this.centerX + 100, this.centerY + 150, 'playmore');
+        this.playmore = this.add.sprite(this.mainmenu.x + 100, this.mainmenu.y + 150, 'playmore');
+        this.playmore.scale.setTo(MyGame.scaleRatio);
         this.playmore.anchor.set(0.5);
         this.playmore.inputEnabled = true;
 
