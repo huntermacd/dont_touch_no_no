@@ -10,23 +10,26 @@ MyGame.GameOver.prototype = {
         this.centerX = game.width / 2;
         this.centerY = game.height / 2;
 
-        this.gameover = this.add.sprite(this.centerX, this.centerY - 180, 'gameover');
-        this.gameover.scale.setTo(MyGame.scaleRatio);
-        this.gameover.anchor.set(0.5);
+        this.scoreDisplay = this.add.text(this.centerX, this.centerY, 'final time: ' + MyGame.finalTime, {font: 'bold 32px Helvetica'});
+        this.scoreDisplay.anchor.set(0.5);
 
-        this.mainmenu = this.add.sprite(this.centerX - 100, this.centerY + 150, 'mainmenu');
+        this.gameover = this.add.sprite(this.centerX, this.scoreDisplay.y - this.scoreDisplay.height, 'gameover');
+        this.gameover.scale.setTo(MyGame.scaleRatio);
+        this.gameover.anchor.set(0.5, 1);
+
+        this.mainmenu = this.add.sprite(this.centerX - 100, this.scoreDisplay.y + this.scoreDisplay.height, 'mainmenu');
         this.mainmenu.scale.setTo(MyGame.scaleRatio);
-        this.mainmenu.anchor.set(0.5);
+        this.mainmenu.anchor.set(0.5, 0);
         this.mainmenu.inputEnabled = true;
 
-        this.playmore = this.add.sprite(this.mainmenu.x + 100, this.mainmenu.y + 150, 'playmore');
+        this.playmore = this.add.sprite(this.mainmenu.x + 200, this.mainmenu.y, 'playmore');
         this.playmore.scale.setTo(MyGame.scaleRatio);
-        this.playmore.anchor.set(0.5);
+        this.playmore.anchor.set(0.5, 0);
         this.playmore.inputEnabled = true;
 
-        this.enterKey = this.input.keyboard.addKey(Phaser.Keyboard.ENTER);
+        this.rightKey = this.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
 
-        this.enterKey.onDown.add(function(){
+        this.rightKey.onDown.add(function(){
             this.state.start('Game');
         }, this);
 
@@ -34,17 +37,14 @@ MyGame.GameOver.prototype = {
             this.state.start('Game');
         }, this);
 
-        this.escKey = this.input.keyboard.addKey(Phaser.Keyboard.ESC);
+        this.leftKey = this.input.keyboard.addKey(Phaser.Keyboard.LEFT);
 
-        this.escKey.onDown.add(function(){
+        this.leftKey.onDown.add(function(){
             this.state.start('MainMenu');
         }, this);
 
         this.mainmenu.events.onInputDown.add(function(){
             this.state.start('MainMenu');
         }, this);
-
-        this.scoreDisplay = this.add.text(this.centerX, this.centerY - 25, 'final time: ' + MyGame.finalTime, {font: 'bold 32px Helvetica'});
-        this.scoreDisplay.anchor.set(0.5);
     }
 };

@@ -22,22 +22,22 @@ MyGame.MainMenu.prototype = {
 
         this.stage.backgroundColor = '#fff';
 
-        this.logo = this.add.sprite(this.centerX, this.centerY - 100, 'logo');
+        this.logo = this.add.sprite(this.centerX, this.centerY, 'logo');
         this.logo.scale.setTo(MyGame.scaleRatio);
-        this.logo.anchor.set(0.5);
+        this.logo.anchor.set(0.5, 1);
 
-        this.playButton = this.add.sprite(this.centerX, this.centerY + 100, 'play');
+        this.playButton = this.add.sprite(this.centerX, this.centerY + 10, 'play');
         this.playButton.scale.setTo(MyGame.scaleRatio);
-        this.playButton.anchor.set(0.5);
+        this.playButton.anchor.set(0.5, 0);
         this.playButton.inputEnabled = true;
 
         this.playButton.events.onInputDown.add(function(){
             this.state.start('Game');
         }, this);
 
-        this.enterKey = this.input.keyboard.addKey(Phaser.Keyboard.ENTER);
+        this.rightKey = this.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
 
-        this.enterKey.onDown.add(function(){
+        this.rightKey.onDown.add(function(){
             this.state.start('Game');
         }, this);
     }
